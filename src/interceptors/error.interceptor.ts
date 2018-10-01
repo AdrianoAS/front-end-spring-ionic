@@ -2,11 +2,12 @@ import { HttpInterceptor, HttpHandler, HttpRequest, HttpEvent, HTTP_INTERCEPTORS
 import { Observable } from "rxjs/Rx";
 import { StoregeService } from "../services/estorege.service";
 import { Injectable } from "@angular/core";
+import { AlertController} from "ionic-angular";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor{
     
-    constructor(public storege: StoregeService){
+    constructor(public storege: StoregeService, public alertCtrl: AlertController){
     }
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         console.log("Passou");
@@ -22,15 +23,50 @@ export class ErrorInterceptor implements HttpInterceptor{
                 console.log("Error detectado pelo interceptor");
                 console.log(errorObj);
                 switch(errorObj.status) {
+                    case 401:
+                    this.handle401();
+                    break;
+
                     case 403:
                     this.handle403();
+                    break;
+
+                    default:
+                    this.handleDefaultError(errorObj);
                     break;
                 }
             return Observable.throw(errorObj);
         }) as any;
     }
+    handle401(){
+        let alert = this.alertCtrl.create({
+            title: 'Erro 401: Falha na autenticação',
+            message: 'Email ou senha incorretos',
+            enableBackdropDismiss: false,
+            buttons : [
+                {
+                    text: 'Ok'
+                }
+            ]
+        });
+        alert.present();
+    }
+
     handle403() {
         this.storege.setLocalUser(null);
+  }
+  handleDefaultError(errorObj){
+    let alert = this.alertCtrl.create({
+        title: 'Erro ' + errorObj.status  + ': ' + errorObj.error,
+        message: errorObj.message,
+        enableBackdropDismiss: false,
+        buttons : [
+            {
+                text: 'Ok'
+            }
+        ]
+    });
+    alert.present();
   }
 }
 
