@@ -1,0 +1,31 @@
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { StoregeService } from '../../services/estorege.service';
+
+/**
+ * Generated class for the ProfilePage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
+
+@IonicPage()
+@Component({
+  selector: 'page-profile',
+  templateUrl: 'profile.html',
+})
+export class ProfilePage {
+
+  email: string;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public storege: StoregeService) {
+  }
+
+  ionViewDidLoad() {
+    let localUser = this.storege.getLocalUser();
+    if(localUser && localUser.email){
+        this.email = localUser.email;
+    }
+  }
+
+}
