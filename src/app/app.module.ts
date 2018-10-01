@@ -12,6 +12,7 @@ import { ErrorInterceptorProvides } from '../interceptors/error.interceptor';
 import { AuthService } from '../services/auth.service';
 import { StoregeService } from '../services/estorege.service';
 import { ClienteService } from '../services/domain/cliente.service';
+import { AuthInterceptorProvider } from '../interceptors/auth.interceptor';
 
 
 @NgModule({
@@ -32,10 +33,11 @@ import { ClienteService } from '../services/domain/cliente.service';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     CategoriaService,
+    AuthInterceptorProvider,
     ErrorInterceptorProvides,
     AuthService,
     StoregeService,
-    ClienteService
+    ClienteService,
   ]
 })
 export class AppModule {}
