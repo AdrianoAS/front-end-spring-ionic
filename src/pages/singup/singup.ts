@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { EstadoService } from '../../services/domain/estado.service';
+import { CidadeService } from '../../services/domain/cidade.service';
+import { EstadoDTO } from '../../models/estado.dto';
+import { CidadeDTO } from '../../models/cidade.dto';
 
 /**
  * Generated class for the SingupPage page.
@@ -17,28 +21,50 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 export class SingupPage {
 
   formGroup: FormGroup;
+  estados: EstadoDTO[];
+  cidades: CidadeDTO[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder) {
+  constructor(public navCtrl: NavController,
+     public navParams: NavParams, 
+     public formBuilder: FormBuilder,
+     public estadoService: EstadoService,
+     public cidadeService: CidadeService) {
 
     this.formGroup = this.formBuilder.group({
-    nome : ['Joaqion',[Validators.required, Validators.minLength(5),Validators.maxLength(100)]],
-    email: ['Joaquin@gmail.com',[Validators.required, Validators.email ]],
-    tipo: ['1', [Validators.required]],
-    cpfOuCnpj: ['06134596280',[Validators.required,Validators.minLength(11),Validators.maxLength(14)]],
-    senha: ['1237',[Validators.required]],
-    logradouro: ['Rua via',[Validators.required]],
-    numero: ['341',[]],
-    complemento: ['Apto 3',[]],
-    bairro: ['Copacabana',[]],
-    cep: ['08226015',[Validators.required]],
-    telefone1: ['20452912',[Validators.required]],
+    nome : ['',[Validators.required, Validators.minLength(5),Validators.maxLength(100)]],
+    email: ['',[Validators.required, Validators.email ]],
+    tipo: ['', [Validators.required]],
+    cpfOuCnpj: ['',[Validators.required,Validators.minLength(11),Validators.maxLength(14)]],
+    senha: ['',[Validators.required]],
+    logradouro: [' ',[Validators.required]],
+    numero: ['',[]],
+    complemento: ['',[]],
+    bairro: ['',[]],
+    cep: ['',[Validators.required]],
+    telefone1: ['',[Validators.required]],
     telefone2: ['', []],
     telefone3: ['',[]],
     estadoId: [null,[Validators.required]],
     cidadeId: [null,[Validators.required]]
     });
-    
-
+  }
+  ionViewDidLoad(){
+    this.estadoService.findAll()
+    .subscribe(response => {
+      this.estados = response;
+      this.formGroup.controls.estadoId.setValue(this.estados[0].id);
+      this.updateCidades();
+    },
+    error => {});
+  }
+  updateCidades(){
+    let estado_id = this.formGroup.value.estadoId;
+    this.cidadeService.findAll(estado_id)
+    .subscribe(response => {
+      this.cidades = response;
+      this.formGroup.controls.cidadeId.setValue(null);
+    },
+    error => {});
   }
 
   SingupUser(){
