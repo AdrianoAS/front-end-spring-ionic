@@ -47,7 +47,6 @@ login(){
  
 }
 singup(){
-  console.log("Passou");
   this.navCtrl.push('SingupPage');
 }
 
