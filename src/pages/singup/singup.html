@@ -22,6 +22,7 @@
     <p class="danger" *ngIf="formGroup.controls['nome'].dirty && formGroup.controls['nome'].errors" margin-left>Valor Inválido</p>
 
     <ion-item>
+        <ion-icon name="logo-googleplus"></ion-icon>
         <ion-label stacked>Email*</ion-label>
         <ion-input formControlName="email" type="text"></ion-input>
       </ion-item>
@@ -72,12 +73,12 @@
        <ion-label stacked>Complemento*</ion-label>
        <ion-input formControlName="complemento" type="text"></ion-input>
     </ion-item>
-    <p class="danger" *ngIf="formGroup.controls['complemento'].dirty && formGroup.controls['complemento'].errors" margin-left>Valor Inválido</p>
+  
 
     <ion-item>
       <ion-label stacked>Bairro*</ion-label>
      <ion-input formControlName="bairro" type="text"></ion-input>
-     </ion-item>4
+     </ion-item>
      <p class="danger" *ngIf="formGroup.controls['bairro'].dirty && formGroup.controls['bairro'].errors" margin-left>Valor Inválido</p>
 
      <ion-item>
