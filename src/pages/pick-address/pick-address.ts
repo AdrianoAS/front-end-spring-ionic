@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { EnderecoDTO } from '../../models/endereco.dto';
+import { StoregeService } from '../../services/estorege.service';
+import { ClienteService } from '../../services/domain/cliente.service';
 
 /**
  * Generated class for the PickAddressPage page.
@@ -18,43 +20,26 @@ export class PickAddressPage {
 
   enderecos : EnderecoDTO[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController,
+     public navParams: NavParams,
+     public storage: StoregeService,
+     public clienteService: ClienteService) {
   }
 
   ionViewDidLoad() {
-    this.enderecos = [
-       {
-      id: "1",
-      logradouro: "Rua 15 de novembro",
-      numero: "300",
-      complemento: "Apto 30",
-      bairro: "Santo Antonio",
-      cep: "08226015",
-       cidade: {
-         id: "1",
-         nome: "Uberlandia",
-          estado: {
-            id: "1",
-            nome: "Minas Gerais"
-          }
+    let localUser = this.storage.getLocalUser();
+    if(localUser && localUser.email){
+      this.clienteService.findByEmail(localUser.email)
+      .subscribe(response => {
+        this.enderecos = response['enderecos'];
+      },
+      error => {
+        if(error.status == 403 ){
+          this.navCtrl.setRoot('HomePage');
         }
-       },
-       {
-        id: "2",
-        logradouro: "Rua Aleia",
-        numero: "341",
-        complemento: "",
-        bairro: "Vila Nova",
-        cep: "08226000",
-         cidade: {
-           id: "1",
-           nome: "Campinas",
-            estado: {
-              id: "2",
-              nome: "São Paulo"
-           }
-        }
-      }
-   ];
+      });
+    }else{
+      this.navCtrl.setRoot('HomePage');
+    }
   }
 }
