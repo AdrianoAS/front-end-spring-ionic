@@ -4,12 +4,15 @@ import { Observable } from "rxjs/Rx";
 import { ClienteDTO } from "../../models/cliente.dto";
 import { API_CONFIG } from "../../config/api.config";
 import { StoregeService } from "../estorege.service";
+import { ImageUtilService } from "../image_utils.service";
 
 
 @Injectable()
 export class ClienteService{
 
-    constructor(public http: HttpClient, public storege: StoregeService){
+    constructor(public http: HttpClient,
+         public storege: StoregeService,
+         public imageUtilService: ImageUtilService){
     }
     
     findById(id: string){
@@ -30,6 +33,17 @@ export class ClienteService{
         obj,
         {
             observe: 'response',
+            responseType: 'text'
+        });
+    }
+    uploadPicture(picture) {
+        let pictureBlob = this.imageUtilService.dataUriToblob(picture);
+        let formData: FormData = new FormData();
+        formData.set('file',pictureBlob,'file.png');
+        return this.http.post(`${API_CONFIG.baseUrl}/clientes/picture`,
+        formData,
+        {
+            observe : 'response',
             responseType: 'text'
         });
     }
